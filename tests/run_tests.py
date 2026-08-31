@@ -13,6 +13,8 @@ from test_mkd import (
     test_event_queue,
     test_error_handling,
     test_logger,
+    test_display,
+    test_display_validation,
 )
 
 
@@ -23,6 +25,8 @@ tests = [
     test_event_queue,
     test_error_handling,
     test_logger,
+    test_display,
+    test_display_validation,
 ]
 
 
