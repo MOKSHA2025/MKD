@@ -26,6 +26,45 @@ class Display:
         self._validate_coordinates(x, y)
         return self._buffer[y][x]
 
+    def draw_rect(self, x, y, width, height, value=1):
+        if width <= 0 or height <= 0:
+            raise ValueError("Rectangle dimensions must be positive")
+
+        if x < 0 or y < 0:
+            raise ValueError("Rectangle coordinates must be non-negative")
+
+        if x + width > self.width or y + height > self.height:
+            raise ValueError("Rectangle exceeds display boundaries")
+
+        for py in range(y, y + height):
+            for px in range(x, x + width):
+                self._buffer[py][px] = value
+
+    def draw_line(self, x1, y1, x2, y2, value=1):
+        dx = abs(x2 - x1)
+        dy = abs(y2 - y1)
+
+        sx = 1 if x1 < x2 else -1
+        sy = 1 if y1 < y2 else -1
+
+        error = dx - dy
+
+        while True:
+            self.set_pixel(x1, y1, value)
+
+            if x1 == x2 and y1 == y2:
+                break
+
+            error2 = 2 * error
+
+            if error2 > -dy:
+                error -= dy
+                x1 += sx
+
+            if error2 < dx:
+                error += dx
+                y1 += sy
+
     def clear(self, value=0):
         for y in range(self.height):
             for x in range(self.width):

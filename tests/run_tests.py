@@ -15,6 +15,7 @@ from test_mkd import (
     test_logger,
     test_display,
     test_display_validation,
+    test_display_line,
 )
 
 
@@ -27,6 +28,7 @@ tests = [
     test_logger,
     test_display,
     test_display_validation,
+    test_display_line,
 ]
 
 

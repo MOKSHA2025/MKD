@@ -127,3 +127,15 @@ def test_display_validation():
         pass
     else:
         raise AssertionError("Invalid dimensions should fail")
+
+def test_display_line():
+    from core.display import Display
+
+    display = Display(10, 10)
+
+    display.draw_line(0, 0, 9, 9, 255)
+
+    assert display.get_pixel(0, 0) == 255
+    assert display.get_pixel(5, 5) == 255
+    assert display.get_pixel(9, 9) == 255
+    assert display.get_pixel(5, 0) == 0
