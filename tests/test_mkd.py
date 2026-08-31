@@ -20,7 +20,9 @@ def test_config():
     config = Config()
 
     assert config.get("system.name") == "MOKSHA KERNEL DESKTOP EXPERIMENT"
-    assert config.has("display.theme")
+    assert config.get("system.version") == "0.1.0"
+    assert config.get("runtime.mode") == "development"
+    assert config.get("runtime.debug") is True
 
 
 def test_runtime():
