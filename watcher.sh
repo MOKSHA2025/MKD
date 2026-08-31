@@ -1,36 +1,43 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+REPO="$HOME/mkd"
+
 echo "MKD — Fully Automatic Development Sync"
 echo "======================================"
-
-REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
-
-if [ "$REPO_ROOT" != "$HOME/mkd" ]; then
-    echo "[ERROR] Not running inside ~/mkd"
-    exit 1
-fi
-
 echo "[MKD] Automatic GitHub synchronization enabled."
 echo "[MKD] Watching project for changes..."
 echo "[MKD] Press Ctrl+C to stop."
 
-LAST_STATE="$(git status --porcelain)"
+cd "$REPO" || exit 1
+
+LAST_COMMIT="$(git rev-parse HEAD)"
+LAST_STATUS="$(git status --porcelain)"
 
 while true; do
-    CURRENT_STATE="$(git status --porcelain)"
+    CURRENT_STATUS="$(git status --porcelain)"
+    CURRENT_COMMIT="$(git rev-parse HEAD)"
 
-    if [ "$CURRENT_STATE" != "$LAST_STATE" ]; then
-        if [ -n "$CURRENT_STATE" ]; then
+    if [ "$CURRENT_STATUS" != "$LAST_STATUS" ]; then
+        if [ -n "$CURRENT_STATUS" ]; then
             echo
             echo "[MKD AUTO-SYNC] Change detected."
-            echo "$CURRENT_STATE"
+            echo "$CURRENT_STATUS"
             echo "[MKD] Waiting for changes to settle..."
             sleep 3
-            echo "[MKD] Synchronizing with GitHub..."
-            ./sync.sh
+
+            echo "[MKD] Running synchronization..."
+            bash "$REPO/sync.sh"
+
+            CURRENT_STATUS="$(git status --porcelain)"
+            CURRENT_COMMIT="$(git rev-parse HEAD)"
+
+            if [ "$CURRENT_COMMIT" != "$LAST_COMMIT" ]; then
+                echo "[MKD] Commit created successfully."
+                LAST_COMMIT="$CURRENT_COMMIT"
+            fi
         fi
 
-        LAST_STATE="$(git status --porcelain)"
+        LAST_STATUS="$CURRENT_STATUS"
     fi
 
     sleep 2

@@ -14,3 +14,9 @@ def get_system_info():
         "version": MKD_VERSION,
         "status": MKD_STATUS,
     }
+# auto-sync-test
+# AUTO-SYNC TEST
+# WATCHER FINAL TEST
+# WATCHER FINAL TEST
+# AUTO SYNC FINAL TEST
+# AUTO-SYNC WORKING TEST
