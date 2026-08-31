@@ -8,6 +8,7 @@ from .events import EventDispatcher, Event
 from .runtime import Runtime
 from .config import Config
 from .logging import get_logger
+from .errors import MKDRuntimeError
 
 
 class MKDCore:
@@ -25,8 +26,6 @@ class MKDCore:
 
         if result:
             self.logger.info("Runtime started")
-        else:
-            self.logger.warning("Runtime already running")
 
         return result
 
@@ -35,14 +34,16 @@ class MKDCore:
 
         if result:
             self.logger.info("Runtime stopped")
-        else:
-            self.logger.warning("Runtime already stopped")
 
         return result
 
     def queue_event(self, event):
         if not self.runtime.is_running():
-            raise RuntimeError("MKD Core is not running")
+            error = MKDRuntimeError(
+                "Cannot queue event while MKD Core is stopped"
+            )
+            self.logger.error(error.message)
+            raise error
 
         if not isinstance(event, Event):
             raise TypeError("queue_event() requires an MKD Event")
@@ -52,7 +53,11 @@ class MKDCore:
 
     def process_events(self):
         if not self.runtime.is_running():
-            raise RuntimeError("MKD Core is not running")
+            error = MKDRuntimeError(
+                "Cannot process events while MKD Core is stopped"
+            )
+            self.logger.error(error.message)
+            raise error
 
         processed = 0
 
