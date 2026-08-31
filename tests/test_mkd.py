@@ -80,3 +80,50 @@ def test_logger():
     logger = get_logger("TEST")
 
     assert logger.name == "TEST"
+
+
+def test_display():
+    from core.display import Display
+
+    display = Display(10, 10)
+
+    assert display.to_dict() == {
+        "version": "0.1.0",
+        "width": 10,
+        "height": 10,
+    }
+
+    display.set_pixel(2, 3, 255)
+
+    assert display.get_pixel(2, 3) == 255
+
+    display.clear()
+
+    assert display.get_pixel(2, 3) == 0
+
+
+def test_display_validation():
+    from core.display import Display
+
+    display = Display(10, 10)
+
+    try:
+        display.set_pixel(-1, 0, 255)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Negative coordinate should fail")
+
+    try:
+        display.set_pixel(10, 0, 255)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Width boundary should fail")
+
+    try:
+        Display(0, 10)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Invalid dimensions should fail")
