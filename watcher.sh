@@ -10,34 +10,27 @@ echo "[MKD] Press Ctrl+C to stop."
 
 cd "$REPO" || exit 1
 
-LAST_COMMIT="$(git rev-parse HEAD)"
-LAST_STATUS="$(git status --porcelain)"
+LAST_STATE=""
 
 while true; do
-    CURRENT_STATUS="$(git status --porcelain)"
-    CURRENT_COMMIT="$(git rev-parse HEAD)"
+    CURRENT_STATE="$(git status --porcelain)"
 
-    if [ "$CURRENT_STATUS" != "$LAST_STATUS" ]; then
-        if [ -n "$CURRENT_STATUS" ]; then
+    if [ "$CURRENT_STATE" != "$LAST_STATE" ]; then
+
+        if [ -n "$CURRENT_STATE" ]; then
             echo
             echo "[MKD AUTO-SYNC] Change detected."
-            echo "$CURRENT_STATUS"
+            echo "$CURRENT_STATE"
             echo "[MKD] Waiting for changes to settle..."
             sleep 3
 
-            echo "[MKD] Running synchronization..."
+            echo "[MKD] Synchronizing with GitHub..."
             bash "$REPO/sync.sh"
 
-            CURRENT_STATUS="$(git status --porcelain)"
-            CURRENT_COMMIT="$(git rev-parse HEAD)"
-
-            if [ "$CURRENT_COMMIT" != "$LAST_COMMIT" ]; then
-                echo "[MKD] Commit created successfully."
-                LAST_COMMIT="$CURRENT_COMMIT"
-            fi
+            echo "[MKD] Sync cycle complete."
         fi
 
-        LAST_STATUS="$CURRENT_STATUS"
+        LAST_STATE="$(git status --porcelain)"
     fi
 
     sleep 2
