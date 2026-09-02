@@ -17,6 +17,7 @@ from test_mkd import (
     test_display,
     test_display_validation,
     test_display_line,
+    test_desktop_composition,
 )
 
 
@@ -31,6 +32,7 @@ tests = [
     test_display,
     test_display_validation,
     test_display_line,
+    test_desktop_composition,
 ]
 
 

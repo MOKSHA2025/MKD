@@ -166,3 +166,32 @@ def test_window_manager():
     assert manager.destroy_window(window_id) is True
     assert manager.get_window(window_id) is None
     assert manager.list_windows() == []
+
+
+def test_desktop_composition():
+    from core.display import Display
+    from core.window_manager import WindowManager
+    from core.desktop import Desktop
+
+    display = Display(640, 480)
+    manager = WindowManager()
+    desktop = Desktop(display, manager)
+
+    window_id = desktop.create_window(
+        50, 50, 300, 200, "MKD Desktop"
+    )
+
+    assert window_id == 1
+    assert desktop.list_windows() == [1]
+
+    active = desktop.get_active_window()
+    assert active is not None
+    assert active.title == "MKD Desktop"
+
+    info = desktop.to_dict()
+    assert info["version"] == "0.1.1"
+    assert info["display"]["width"] == 640
+    assert info["display"]["height"] == 480
+    assert info["window_manager"]["window_count"] == 1
+
+    return True

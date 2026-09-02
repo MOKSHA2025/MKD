@@ -1,4 +1,6 @@
-DESKTOP_VERSION = "0.1.0"
+from core.window import Window
+
+DESKTOP_VERSION = "0.1.1"
 
 
 class Desktop:
@@ -17,6 +19,19 @@ class Desktop:
 
     def get_window_manager(self):
         return self.window_manager
+
+    def create_window(self, x, y, width, height, title):
+        window = Window(x, y, width, height, title)
+        return self.window_manager.create_window(window)
+
+    def get_window(self, window_id):
+        return self.window_manager.get_window(window_id)
+
+    def list_windows(self):
+        return self.window_manager.list_windows()
+
+    def get_active_window(self):
+        return self.window_manager.get_active_window()
 
     def to_dict(self):
         return {
