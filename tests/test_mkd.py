@@ -139,3 +139,30 @@ def test_display_line():
     assert display.get_pixel(5, 5) == 255
     assert display.get_pixel(9, 9) == 255
     assert display.get_pixel(5, 0) == 0
+
+
+def test_window_manager():
+    from core.window import Window
+    from core.window_manager import WindowManager
+
+    manager = WindowManager()
+
+    window = Window(
+        10,
+        20,
+        300,
+        200,
+        "MKD Desktop"
+    )
+
+    window_id = manager.create_window(window)
+
+    assert window_id == 1
+    assert manager.get_window(window_id) is window
+    assert manager.list_windows() == [1]
+    assert manager.get_active_window() is window
+
+    assert manager.set_active_window(window_id) is True
+    assert manager.destroy_window(window_id) is True
+    assert manager.get_window(window_id) is None
+    assert manager.list_windows() == []
